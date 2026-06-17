@@ -1,0 +1,1247 @@
+<!DOCTYPE html>
+<html lang="it">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <meta name="description" content="Maturità Predictor 2026 - simulazione statistica delle tracce della Prima Prova di Italiano basata su dati storici." />
+  <meta http-equiv="Content-Security-Policy" content="default-src 'self'; script-src 'self' 'unsafe-inline'; style-src 'self' 'unsafe-inline'; img-src 'self' data:; font-src 'self'; connect-src 'none'; object-src 'none'; base-uri 'none'; form-action 'none'; frame-src 'none'; frame-ancestors 'none'; upgrade-insecure-requests" />
+  <meta name="referrer" content="no-referrer" />
+  <meta http-equiv="Permissions-Policy" content="camera=(), microphone=(), geolocation=(), payment=(), usb=(), bluetooth=(), accelerometer=(), gyroscope=(), magnetometer=(), clipboard-write=(), fullscreen=(self)" />
+  <meta http-equiv="X-Content-Type-Options" content="nosniff" />
+  <meta name="robots" content="index, follow" />
+  <title>Maturità Predictor 2026</title>
+  <style>
+    :root {
+      --color-void: #000000;
+      --color-bone: #ffffff;
+      --color-ash: #bdbdbd;
+      --color-smoke: #9a9a9a;
+      --color-plum-voltage: #8052ff;
+      --color-amber-spark: #ffb829;
+      --color-lichen: #15846e;
+      --color-cyan: #32e6ff;
+      --font-acronym: Inter, ui-sans-serif, system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
+      --page-max-width: 1200px;
+      --radius: 24px;
+      --card-border: rgba(255, 255, 255, 0.14);
+      --panel: rgba(255, 255, 255, 0.045);
+    }
+
+    * {
+      box-sizing: border-box;
+    }
+
+    html {
+      scroll-behavior: smooth;
+    }
+
+    body {
+      margin: 0;
+      min-height: 100vh;
+      color: var(--color-bone);
+      background: var(--color-void);
+      font-family: var(--font-acronym);
+      overflow-x: hidden;
+    }
+
+    body::before {
+      content: "";
+      position: fixed;
+      inset: 0;
+      pointer-events: none;
+      background:
+        radial-gradient(circle at 78% 18%, rgba(128, 82, 255, 0.14), transparent 28%),
+        radial-gradient(circle at 18% 82%, rgba(50, 230, 255, 0.09), transparent 24%),
+        linear-gradient(180deg, rgba(128, 82, 255, 0.06), transparent 42%);
+      z-index: -2;
+    }
+
+    a {
+      color: inherit;
+      text-decoration: none;
+    }
+
+    button {
+      font: inherit;
+    }
+
+    .particle-canvas {
+      position: fixed;
+      inset: 0;
+      z-index: -1;
+      width: 100%;
+      height: 100%;
+    }
+
+    .loader {
+      position: fixed;
+      inset: 0;
+      z-index: 40;
+      display: grid;
+      place-items: center;
+      background: #000;
+      transition: opacity 700ms ease, visibility 700ms ease;
+      animation: loaderFailsafe 2s ease forwards;
+    }
+
+    .loader.is-hidden {
+      opacity: 0;
+      visibility: hidden;
+    }
+
+    .loader-core {
+      width: min(480px, calc(100vw - 36px));
+      padding: 30px;
+      border: 1px solid rgba(255, 255, 255, 0.16);
+      border-radius: var(--radius);
+      background: rgba(0, 0, 0, 0.72);
+      backdrop-filter: blur(18px);
+    }
+
+    .loader-label,
+    .eyebrow,
+    .metric-label,
+    .card-meta,
+    .disclaimer strong {
+      text-transform: uppercase;
+      letter-spacing: 0.05em;
+      font-size: 12px;
+      font-weight: 700;
+    }
+
+    .loader-title {
+      margin: 12px 0 18px;
+      font-size: clamp(30px, 8vw, 58px);
+      line-height: 0.9;
+      font-weight: 200;
+      letter-spacing: -0.04em;
+    }
+
+    .load-track,
+    .scan-track,
+    .progress-shell {
+      position: relative;
+      overflow: hidden;
+      height: 10px;
+      border-radius: 999px;
+      border: 1px solid rgba(255, 255, 255, 0.14);
+      background: rgba(255, 255, 255, 0.055);
+    }
+
+    .load-fill,
+    .scan-fill,
+    .progress-fill {
+      height: 100%;
+      border-radius: inherit;
+      background: linear-gradient(90deg, var(--color-plum-voltage), var(--color-cyan));
+      box-shadow: 0 0 28px rgba(128, 82, 255, 0.5);
+    }
+
+    .load-fill {
+      width: 0%;
+      animation: bootLoad 1.6s ease forwards;
+    }
+
+    header {
+      position: fixed;
+      top: 18px;
+      left: 50%;
+      z-index: 20;
+      width: min(var(--page-max-width), calc(100vw - 28px));
+      transform: translateX(-50%);
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 18px;
+      padding: 10px 10px 10px 18px;
+      border: 1px solid rgba(255, 255, 255, 0.12);
+      border-radius: var(--radius);
+      background: rgba(0, 0, 0, 0.58);
+      backdrop-filter: blur(18px);
+    }
+
+    .brand {
+      display: flex;
+      align-items: center;
+      gap: 10px;
+      min-width: 0;
+      font-weight: 700;
+      letter-spacing: 0.02em;
+    }
+
+    .brand-mark {
+      width: 30px;
+      height: 30px;
+      border: 1px solid rgba(128, 82, 255, 0.9);
+      border-radius: 10px;
+      display: grid;
+      place-items: center;
+      color: var(--color-plum-voltage);
+      transform: rotate(45deg);
+    }
+
+    .brand-mark span {
+      transform: rotate(-45deg);
+      font-size: 13px;
+    }
+
+    nav {
+      display: flex;
+      align-items: center;
+      gap: 22px;
+    }
+
+    nav a {
+      color: var(--color-smoke);
+      font-size: 13px;
+      letter-spacing: 0.021em;
+      transition: color 200ms ease;
+    }
+
+    nav a:hover {
+      color: var(--color-bone);
+    }
+
+    .pill-btn {
+      cursor: pointer;
+      border: 0;
+      border-radius: var(--radius);
+      color: var(--color-bone);
+      background: var(--color-plum-voltage);
+      padding: 14px 18px;
+      font-size: 12px;
+      font-weight: 700;
+      letter-spacing: 0.05em;
+      text-transform: uppercase;
+      transition: transform 220ms ease, box-shadow 220ms ease;
+      box-shadow: 0 0 34px rgba(128, 82, 255, 0.34);
+      white-space: nowrap;
+    }
+
+    .pill-btn:hover {
+      transform: translateY(-2px);
+      box-shadow: 0 0 52px rgba(128, 82, 255, 0.56);
+    }
+
+    main {
+      position: relative;
+      z-index: 1;
+    }
+
+    .section {
+      width: min(var(--page-max-width), calc(100vw - 32px));
+      margin: 0 auto;
+      padding: 78px 0;
+    }
+
+    .hero {
+      min-height: 100vh;
+      display: grid;
+      grid-template-columns: minmax(0, 0.95fr) minmax(280px, 1.05fr);
+      align-items: center;
+      gap: clamp(30px, 6vw, 84px);
+      padding-top: 118px;
+    }
+
+    .eyebrow {
+      color: var(--color-plum-voltage);
+      margin: 0 0 14px;
+    }
+
+    h1,
+    h2,
+    h3,
+    p {
+      margin-top: 0;
+    }
+
+    h1 {
+      margin-bottom: 22px;
+      max-width: 700px;
+      font-weight: 200;
+      font-size: clamp(58px, 10vw, 116px);
+      line-height: 0.84;
+      letter-spacing: -0.04em;
+    }
+
+    h2 {
+      margin-bottom: 14px;
+      font-size: clamp(38px, 7vw, 78px);
+      line-height: 0.9;
+      letter-spacing: -0.04em;
+      font-weight: 200;
+    }
+
+    h3 {
+      margin-bottom: 10px;
+      font-size: 20px;
+      line-height: 1.2;
+    }
+
+    .lead,
+    .section-intro,
+    .muted {
+      color: var(--color-ash);
+      line-height: 1.55;
+      letter-spacing: 0.025em;
+    }
+
+    .lead {
+      max-width: 620px;
+      font-size: clamp(16px, 2vw, 20px);
+    }
+
+    .hero-actions {
+      display: flex;
+      align-items: center;
+      flex-wrap: wrap;
+      gap: 14px;
+      margin-top: 28px;
+    }
+
+    .ghost-chip {
+      border: 1px solid rgba(255, 255, 255, 0.16);
+      border-radius: var(--radius);
+      padding: 12px 16px;
+      color: var(--color-ash);
+      font-size: 13px;
+      background: rgba(255, 255, 255, 0.035);
+      backdrop-filter: blur(14px);
+    }
+
+    .hero-visual {
+      min-height: min(62vh, 620px);
+      position: relative;
+      display: grid;
+      place-items: center;
+    }
+
+    .orbital {
+      width: min(520px, 82vw);
+      aspect-ratio: 1;
+      position: relative;
+      border-radius: 50%;
+      border: 1px solid rgba(255, 255, 255, 0.12);
+      animation: slowRotate 26s linear infinite;
+    }
+
+    .orbital::before,
+    .orbital::after {
+      content: "";
+      position: absolute;
+      inset: 10%;
+      border-radius: 50%;
+      border: 1px solid rgba(128, 82, 255, 0.28);
+      transform: rotate(32deg);
+    }
+
+    .orbital::after {
+      inset: 24%;
+      border-color: rgba(50, 230, 255, 0.22);
+      transform: rotate(-24deg);
+    }
+
+    .node {
+      position: absolute;
+      width: 10px;
+      height: 10px;
+      border-radius: 50%;
+      background: var(--color-bone);
+      box-shadow: 0 0 22px currentColor;
+      animation: pulse 2.4s ease-in-out infinite;
+    }
+
+    .node:nth-child(1) { top: 14%; left: 56%; color: var(--color-plum-voltage); }
+    .node:nth-child(2) { top: 46%; right: 4%; color: var(--color-cyan); animation-delay: 0.4s; }
+    .node:nth-child(3) { bottom: 13%; left: 26%; color: var(--color-amber-spark); animation-delay: 0.8s; }
+    .node:nth-child(4) { top: 32%; left: 12%; color: var(--color-lichen); animation-delay: 1.2s; }
+
+    .scan-panel {
+      position: absolute;
+      width: min(430px, 88vw);
+      padding: 24px;
+      border: 1px solid rgba(255, 255, 255, 0.14);
+      border-radius: var(--radius);
+      background: rgba(0, 0, 0, 0.66);
+      backdrop-filter: blur(18px);
+    }
+
+    .scan-header {
+      display: flex;
+      justify-content: space-between;
+      gap: 16px;
+      margin-bottom: 18px;
+      font-size: 12px;
+      letter-spacing: 0.05em;
+      text-transform: uppercase;
+      color: var(--color-ash);
+    }
+
+    .scan-track {
+      height: 14px;
+    }
+
+    .scan-fill {
+      width: 0%;
+    }
+
+    .scan-panel.is-running .scan-fill {
+      animation: analysisLoad 3.2s cubic-bezier(0.22, 1, 0.36, 1) forwards;
+    }
+
+    .scan-line {
+      position: absolute;
+      inset: 0;
+      pointer-events: none;
+      overflow: hidden;
+      border-radius: inherit;
+    }
+
+    .scan-line::before {
+      content: "";
+      position: absolute;
+      left: -30%;
+      top: 0;
+      width: 24%;
+      height: 100%;
+      background: linear-gradient(90deg, transparent, rgba(50, 230, 255, 0.45), transparent);
+      transform: skewX(-18deg);
+    }
+
+    .scan-panel.is-running .scan-line::before {
+      animation: sweep 1.15s ease-in-out infinite;
+    }
+
+    .status-grid {
+      display: grid;
+      grid-template-columns: repeat(2, 1fr);
+      gap: 12px;
+      margin-top: 18px;
+    }
+
+    .status-item,
+    .metric-card,
+    .data-card,
+    .policy-card,
+    .disclaimer {
+      border: 1px solid var(--card-border);
+      border-radius: var(--radius);
+      background: var(--panel);
+      backdrop-filter: blur(16px);
+    }
+
+    .status-item {
+      padding: 14px;
+    }
+
+    .status-item b {
+      display: block;
+      font-size: 24px;
+      font-weight: 200;
+      color: var(--color-cyan);
+    }
+
+    .section-head {
+      display: grid;
+      grid-template-columns: minmax(0, 1fr) minmax(260px, 420px);
+      gap: 24px;
+      align-items: end;
+      margin-bottom: 28px;
+    }
+
+    .section-intro {
+      margin-bottom: 0;
+    }
+
+    .ai-strip {
+      min-height: 76px;
+      padding: 18px;
+      border: 1px solid rgba(128, 82, 255, 0.25);
+      border-radius: var(--radius);
+      background: rgba(128, 82, 255, 0.06);
+      position: relative;
+      overflow: hidden;
+    }
+
+    .ai-strip::after {
+      content: "";
+      position: absolute;
+      inset: 0;
+      background: linear-gradient(100deg, transparent, rgba(255, 255, 255, 0.12), transparent);
+      transform: translateX(-100%);
+      animation: stripSweep 3.2s ease-in-out infinite;
+    }
+
+    .grid {
+      display: grid;
+      gap: 16px;
+    }
+
+    .grid.two {
+      grid-template-columns: repeat(2, minmax(0, 1fr));
+    }
+
+    .grid.three {
+      grid-template-columns: repeat(3, minmax(0, 1fr));
+    }
+
+    .four-metrics {
+      grid-template-columns: repeat(4, minmax(0, 1fr));
+    }
+
+    .metric-card {
+      padding: 24px;
+      min-height: 152px;
+    }
+
+    .policy-card {
+      min-height: 210px;
+      padding: 24px;
+    }
+
+    .metric-value {
+      margin: 8px 0;
+      font-size: clamp(38px, 5vw, 62px);
+      line-height: 0.95;
+      font-weight: 200;
+      letter-spacing: -0.04em;
+    }
+
+    .metric-label {
+      color: var(--color-smoke);
+    }
+
+    .data-card {
+      padding: 22px;
+      transition: border-color 220ms ease, transform 220ms ease, background 220ms ease;
+    }
+
+    .data-card:hover {
+      transform: translateY(-4px);
+      border-color: rgba(128, 82, 255, 0.55);
+      background: rgba(128, 82, 255, 0.08);
+    }
+
+    .rank-row {
+      display: grid;
+      grid-template-columns: auto minmax(0, 1fr) auto;
+      gap: 12px;
+      align-items: start;
+      margin-bottom: 14px;
+    }
+
+    .rank {
+      width: 34px;
+      height: 34px;
+      display: grid;
+      place-items: center;
+      border-radius: 12px;
+      border: 1px solid rgba(255, 255, 255, 0.14);
+      color: var(--color-cyan);
+      font-size: 12px;
+      font-weight: 700;
+    }
+
+    .prob {
+      color: var(--color-bone);
+      font-size: 24px;
+      font-weight: 200;
+      letter-spacing: -0.02em;
+      white-space: nowrap;
+    }
+
+    .progress-shell {
+      height: 8px;
+      margin: 12px 0 14px;
+    }
+
+    .progress-fill {
+      width: 0%;
+      transition: width 1.35s cubic-bezier(0.22, 1, 0.36, 1);
+    }
+
+    .facts {
+      display: grid;
+      grid-template-columns: repeat(3, 1fr);
+      gap: 8px;
+      margin: 14px 0;
+    }
+
+    .fact {
+      padding: 10px;
+      border-radius: 16px;
+      background: rgba(255, 255, 255, 0.055);
+      color: var(--color-ash);
+      font-size: 12px;
+      line-height: 1.35;
+    }
+
+    .fact b {
+      display: block;
+      color: var(--color-bone);
+      font-size: 15px;
+      margin-bottom: 2px;
+    }
+
+    .tag-list {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 8px;
+      margin-top: 14px;
+    }
+
+    .tag {
+      border: 1px solid rgba(255, 255, 255, 0.14);
+      border-radius: 999px;
+      padding: 7px 10px;
+      color: var(--color-ash);
+      font-size: 12px;
+      background: rgba(0, 0, 0, 0.28);
+    }
+
+    .works-grid {
+      grid-template-columns: repeat(5, minmax(0, 1fr));
+    }
+
+    .work-card {
+      min-height: 170px;
+      display: flex;
+      flex-direction: column;
+      justify-content: space-between;
+    }
+
+    .mini-chart {
+      height: 72px;
+      display: flex;
+      align-items: end;
+      gap: 5px;
+      margin-top: 18px;
+    }
+
+    .mini-chart span {
+      flex: 1;
+      min-width: 4px;
+      border-radius: 999px 999px 0 0;
+      background: linear-gradient(180deg, var(--color-cyan), var(--color-plum-voltage));
+      opacity: 0.82;
+      transform-origin: bottom;
+      transform: scaleY(0.22);
+      transition: transform 900ms ease;
+    }
+
+    .is-visible .mini-chart span {
+      transform: scaleY(1);
+    }
+
+    .disclaimer {
+      width: min(var(--page-max-width), calc(100vw - 32px));
+      margin: 22px auto 42px;
+      padding: 24px;
+      color: var(--color-ash);
+      line-height: 1.6;
+      border-color: rgba(255, 184, 41, 0.32);
+      background: rgba(255, 184, 41, 0.055);
+    }
+
+    .disclaimer strong {
+      display: block;
+      color: var(--color-amber-spark);
+      margin-bottom: 8px;
+    }
+
+    .reveal {
+      opacity: 1;
+      transform: none;
+      transition: none;
+    }
+
+    .reveal.is-visible {
+      opacity: 1;
+      transform: none;
+    }
+
+    .results-zone {
+      opacity: 1;
+      filter: none;
+      transition: opacity 900ms ease, filter 900ms ease;
+    }
+
+    .results-zone.is-ready {
+      opacity: 1;
+      filter: none;
+    }
+
+    @keyframes bootLoad {
+      to { width: 100%; }
+    }
+
+    @keyframes loaderFailsafe {
+      0%, 82% { opacity: 1; visibility: visible; }
+      100% { opacity: 0; visibility: hidden; }
+    }
+
+    @keyframes analysisLoad {
+      0% { width: 0%; }
+      38% { width: 42%; }
+      72% { width: 79%; }
+      100% { width: 100%; }
+    }
+
+    @keyframes sweep {
+      to { left: 126%; }
+    }
+
+    @keyframes stripSweep {
+      50%, 100% { transform: translateX(100%); }
+    }
+
+    @keyframes slowRotate {
+      to { transform: rotate(360deg); }
+    }
+
+    @keyframes pulse {
+      0%, 100% { transform: scale(1); opacity: 0.78; }
+      50% { transform: scale(1.55); opacity: 1; }
+    }
+
+    @media (max-width: 920px) {
+      header {
+        align-items: flex-start;
+      }
+
+      nav {
+        display: none;
+      }
+
+      .hero,
+      .section-head,
+      .grid.two,
+      .grid.three,
+      .four-metrics {
+        grid-template-columns: 1fr;
+      }
+
+      .hero {
+        padding-top: 112px;
+      }
+
+      .hero-visual {
+        min-height: 480px;
+      }
+
+      .works-grid {
+        grid-template-columns: repeat(2, minmax(0, 1fr));
+      }
+    }
+
+    @media (max-width: 640px) {
+      header {
+        top: 10px;
+        width: calc(100vw - 20px);
+      }
+
+      .brand {
+        font-size: 13px;
+      }
+
+      .header-cta {
+        display: none;
+      }
+
+      .section {
+        width: calc(100vw - 24px);
+        padding: 52px 0;
+      }
+
+      h1 {
+        font-size: clamp(50px, 17vw, 72px);
+      }
+
+      h2 {
+        font-size: clamp(38px, 12vw, 58px);
+      }
+
+      .facts,
+      .status-grid,
+      .works-grid {
+        grid-template-columns: 1fr;
+      }
+
+      .rank-row {
+        grid-template-columns: auto minmax(0, 1fr);
+      }
+
+      .prob {
+        grid-column: 2;
+      }
+
+    }
+  </style>
+</head>
+<body>
+  <canvas class="particle-canvas" id="particleCanvas" aria-hidden="true"></canvas>
+
+  <div class="loader" id="loader" role="status" aria-label="Caricamento interfaccia">
+    <div class="loader-core">
+      <div class="loader-label">Inizializzazione modello statistico</div>
+      <div class="loader-title">Maturità Predictor 2026</div>
+      <div class="load-track"><div class="load-fill"></div></div>
+    </div>
+  </div>
+
+  <header>
+    <a class="brand" href="#top" aria-label="Maturità Predictor 2026">
+      <span class="brand-mark"><span>AI</span></span>
+      <span>Maturità Predictor 2026</span>
+    </a>
+    <nav aria-label="Navigazione principale">
+      <a href="#tipologia-a">Tipologia A</a>
+      <a href="#tipologia-b">Tipologia B</a>
+      <a href="#tipologia-c">Tipologia C</a>
+      <a href="#policy">Policy</a>
+    </nav>
+    <button class="pill-btn header-cta" data-start>Avvia Analisi</button>
+  </header>
+
+  <main id="top">
+    <section class="section hero">
+      <div class="reveal">
+        <p class="eyebrow">Simulazione statistica - dati storici</p>
+        <h1>Maturità Predictor 2026</h1>
+        <p class="lead">Analisi statistica delle tracce della Prima Prova di Italiano basata sugli esami degli anni precedenti.</p>
+        <p class="muted">Il sistema non conosce le tracce reali: genera stime probabilistiche e scenari simulati a scopo informativo e didattico.</p>
+        <div class="hero-actions">
+          <button class="pill-btn" data-start>Avvia Analisi</button>
+          <span class="ghost-chip">Output non ufficiale</span>
+        </div>
+      </div>
+
+      <div class="hero-visual reveal">
+        <div class="orbital" aria-hidden="true">
+          <span class="node"></span>
+          <span class="node"></span>
+          <span class="node"></span>
+          <span class="node"></span>
+        </div>
+        <div class="scan-panel" id="scanPanel">
+          <div class="scan-line"></div>
+          <div class="scan-header">
+            <span>Motore predittivo</span>
+            <span id="scanPercent">0%</span>
+          </div>
+          <div class="scan-track"><div class="scan-fill"></div></div>
+          <div class="status-grid">
+            <div class="status-item"><b class="counter" data-target="2500" data-suffix="+">0</b><span>Dataset</span></div>
+            <div class="status-item"><b class="counter" data-target="40" data-suffix="+">0</b><span>Prove</span></div>
+            <div class="status-item"><b class="counter" data-target="100" data-suffix="+">0</b><span>Autori</span></div>
+            <div class="status-item"><b class="counter" data-target="82" data-suffix="%">0</b><span>Affidabilità stimata</span></div>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <div class="results-zone" id="resultsZone">
+      <section class="section" id="engine">
+        <div class="section-head reveal">
+          <div>
+            <p class="eyebrow">Simulazione AI</p>
+            <h2>Motore Predittivo</h2>
+          </div>
+          <p class="section-intro">Indicatori dinamici costruiti come simulazione su frequenze storiche, ricorrenze tematiche e anni di assenza dalle prove precedenti.</p>
+        </div>
+        <div class="grid four-metrics reveal" id="metricsGrid">
+          <article class="metric-card">
+            <div class="metric-label">Dataset analizzati</div>
+            <div class="metric-value counter" data-target="2500" data-suffix="+">0</div>
+            <p class="muted">Archivio sintetico di fonti, temi, ricorrenze e metadati.</p>
+          </article>
+          <article class="metric-card">
+            <div class="metric-label">Tracce analizzate</div>
+            <div class="metric-value counter" data-target="40" data-suffix="+">0</div>
+            <p class="muted">Campioni storici della Prima Prova e classificazioni correlate.</p>
+          </article>
+          <article class="metric-card">
+            <div class="metric-label">Autori monitorati</div>
+            <div class="metric-value counter" data-target="100" data-suffix="+">0</div>
+            <p class="muted">Profilazione per ricorrenza, periodo, genere e assenza.</p>
+          </article>
+          <article class="metric-card">
+            <div class="metric-label">Accuratezza stimata</div>
+            <div class="metric-value counter" data-target="82" data-suffix="%">0</div>
+            <p class="muted">Indice simulato, non certificato e non predittivo in senso certo.</p>
+          </article>
+        </div>
+      </section>
+
+      <section class="section" id="tipologia-a">
+        <div class="section-head reveal">
+          <div>
+            <p class="eyebrow">Sezione 1 - Tipologia A</p>
+            <h2>Analisi Autori Più Probabili</h2>
+          </div>
+          <div class="ai-strip">
+            <div class="metric-label">Scansione storico-letteraria</div>
+            <p class="section-intro">Top 10 generata combinando frequenza, assenza e centralità nei programmi scolastici.</p>
+          </div>
+        </div>
+        <div class="grid two" id="authorsGrid"></div>
+
+        <div class="section-head reveal" style="margin-top: 60px;">
+          <div>
+            <p class="eyebrow">Possibili opere</p>
+            <h2>Testi ad Alta Ricorrenza</h2>
+          </div>
+          <p class="section-intro">La probabilità indicata è una simulazione animata basata su presenza nei percorsi didattici e compatibilità con analisi testuale.</p>
+        </div>
+        <div class="grid works-grid" id="worksGrid"></div>
+      </section>
+
+      <section class="section" id="tipologia-b">
+        <div class="section-head reveal">
+          <div>
+            <p class="eyebrow">Sezione 2 - Tipologia B</p>
+            <h2>Analisi del Testo Argomentativo</h2>
+          </div>
+          <p class="section-intro">Categorie ordinate per probabilità simulata, motivazione statistica, frequenza storica e indicatori visuali.</p>
+        </div>
+        <div class="grid two" id="argumentGrid"></div>
+      </section>
+
+      <section class="section" id="tipologia-c">
+        <div class="section-head reveal">
+          <div>
+            <p class="eyebrow">Sezione 3 - Tipologia C</p>
+            <h2>Temi di Attualità</h2>
+          </div>
+          <p class="section-intro">Top 10 argomenti probabili come scenari di educazione civica, cittadinanza e attualità contemporanea.</p>
+        </div>
+        <div class="grid two" id="currentGrid"></div>
+      </section>
+
+      <section class="section" id="policy">
+        <div class="section-head reveal">
+          <div>
+            <p class="eyebrow">Sicurezza e trasparenza</p>
+            <h2>Policy del sito</h2>
+          </div>
+          <p class="section-intro">Il sito è statico, non invia dati a server esterni e non utilizza tracciamenti, moduli o cookie.</p>
+        </div>
+        <div class="grid three">
+          <article class="policy-card reveal">
+            <div class="metric-label">Privacy Policy</div>
+            <h3>Nessuna raccolta dati</h3>
+            <p class="muted">La pagina funziona interamente nel browser. Non vengono richiesti nome, email, posizione, credenziali o altri dati personali.</p>
+          </article>
+          <article class="policy-card reveal">
+            <div class="metric-label">Cookie Policy</div>
+            <h3>Cookie non utilizzati</h3>
+            <p class="muted">Non sono presenti cookie tecnici, analytics, advertising pixel o strumenti di profilazione.</p>
+          </article>
+          <article class="policy-card reveal">
+            <div class="metric-label">Security Policy</div>
+            <h3>Permessi bloccati</h3>
+            <p class="muted">Le policy limitano connessioni esterne, frame, form, oggetti incorporati e permessi sensibili come camera, microfono, geolocalizzazione e pagamenti.</p>
+          </article>
+        </div>
+      </section>
+    </div>
+  </main>
+
+  <footer class="disclaimer">
+    <strong>Disclaimer</strong>
+    Le previsioni mostrate sono simulazioni statistiche e non rappresentano informazioni ufficiali o riservate del Ministero dell'Istruzione. I risultati hanno esclusivamente scopo informativo e didattico.
+  </footer>
+
+  <script>
+    const authors = [
+      { name: "Giovanni Pascoli", prob: 79, last: "2012", freq: "Alta", absent: 14, level: "Molto alta", works: "Il Fanciullino, X Agosto", reason: "Elevata centralità scolastica e lungo intervallo di assenza dalla prima prova." },
+      { name: "Gabriele D'Annunzio", prob: 74, last: "2010", freq: "Medio-alta", absent: 16, level: "Alta", works: "La Pioggia nel Pineto, Il Piacere", reason: "Autore canonico con forte compatibilità per analisi poetica e prosa simbolista." },
+      { name: "Luigi Pirandello", prob: 72, last: "2003", freq: "Alta", absent: 23, level: "Alta", works: "Uno, Nessuno e Centomila", reason: "Temi identità-crisi molto aderenti ai percorsi del Novecento." },
+      { name: "Italo Svevo", prob: 69, last: "2009", freq: "Media", absent: 17, level: "Alta", works: "La Coscienza di Zeno", reason: "Profilo ricorrente per modernità, psicoanalisi e romanzo europeo." },
+      { name: "Eugenio Montale", prob: 66, last: "2012", freq: "Alta", absent: 14, level: "Alta", works: "Ossi di Seppia, Le Occasioni", reason: "Frequenza storica robusta e testi adatti a commento poetico." },
+      { name: "Giuseppe Ungaretti", prob: 63, last: "2011", freq: "Media", absent: 15, level: "Medio-alta", works: "L'Allegria, Il Porto Sepolto", reason: "Presenza costante nei programmi e legame con guerra e memoria." },
+      { name: "Italo Calvino", prob: 59, last: "2015", freq: "Media", absent: 11, level: "Media", works: "Le città invisibili, Il sentiero dei nidi di ragno", reason: "Autore trasversale fra narrativa, scienza, cittadinanza e immaginazione." },
+      { name: "Primo Levi", prob: 57, last: "2010", freq: "Media", absent: 16, level: "Media", works: "Se questo è un uomo", reason: "Valore civile e storico, spesso collegabile a memoria e responsabilità." },
+      { name: "Umberto Saba", prob: 53, last: "2000", freq: "Medio-bassa", absent: 26, level: "Media", works: "Il Canzoniere", reason: "Lunga assenza e forte riconoscibilità tematica nella poesia novecentesca." },
+      { name: "Cesare Pavese", prob: 49, last: "2008", freq: "Medio-bassa", absent: 18, level: "Media", works: "La luna e i falò", reason: "Possibile per identità, memoria, paesaggio e dopoguerra." }
+    ];
+
+    const works = [
+      ["Il Fanciullino", 76], ["La Pioggia nel Pineto", 72], ["Uno, Nessuno e Centomila", 69],
+      ["La Coscienza di Zeno", 66], ["Ossi di Seppia", 64]
+    ];
+
+    const argumentsData = [
+      ["Intelligenza Artificiale", 84, "Tema emergente e altamente interdisciplinare.", "Alta", "Etica algoritmica, scuola, lavoro"],
+      ["Tecnologia", 78, "Ricorrenza crescente nelle tracce argomentative.", "Alta", "Innovazione, progresso, responsabilità"],
+      ["Social Network", 74, "Presenza costante nel dibattito su giovani e informazione.", "Medio-alta", "Relazioni, identità digitale, privacy"],
+      ["Ambiente", 72, "Tema stabile in educazione civica e attualità.", "Alta", "Clima, biodiversità, consumo"],
+      ["Sostenibilità", 69, "Frequente nei percorsi su futuro e sviluppo.", "Media", "Agenda 2030, economia circolare"],
+      ["Guerra e Pace", 65, "Attualità geopolitica e memoria storica.", "Media", "Diplomazia, diritti, conflitti"],
+      ["Costituzione", 62, "Fondamento civico e ricorrenza istituzionale.", "Media", "Democrazia, cittadinanza, libertà"],
+      ["Giovani e Futuro", 60, "Tema ponte tra scuola, lavoro e società.", "Alta", "Scelte, fragilità, opportunità"],
+      ["Lavoro", 56, "Argomento ricorrente per trasformazioni sociali.", "Media", "Automazione, competenze, dignità"],
+      ["Scienza", 51, "Buona compatibilità con tracce divulgative.", "Medio-bassa", "Metodo, ricerca, progresso"]
+    ];
+
+    const currentTopics = [
+      ["Intelligenza Artificiale", 86, "Impatto culturale, scolastico e professionale.", "È il tema con massima pressione mediatica e didattica."],
+      ["Cittadinanza Digitale", 78, "Diritti e doveri negli ambienti online.", "Collega tecnologia, responsabilità e Costituzione."],
+      ["Educazione", 74, "Ruolo della scuola nella società complessa.", "Tema sempre adattabile a riflessioni personali."],
+      ["Ambiente", 72, "Crisi climatica e scelte individuali.", "Alta presenza nel dibattito pubblico."],
+      ["Disinformazione", 70, "Fake news, fonti e pensiero critico.", "Molto coerente con media literacy e democrazia."],
+      ["Diritti Umani", 66, "Dignità, libertà, uguaglianza.", "Ricorrenza storica e valore trasversale."],
+      ["Inclusione", 62, "Accessibilità, differenze, comunità.", "Tema civico e scolastico ad ampia trattabilità."],
+      ["Giovani e Social", 60, "Identità, relazioni, benessere digitale.", "Forte legame con esperienza degli studenti."],
+      ["Tecnologia", 58, "Progresso e limiti dell'innovazione.", "Categoria stabile nelle tracce contemporanee."],
+      ["Innovazione", 55, "Ricerca, impresa e trasformazione.", "Tema generale utile per scenari futuri."],
+    ];
+
+    const $ = (selector, root = document) => root.querySelector(selector);
+    const $$ = (selector, root = document) => [...root.querySelectorAll(selector)];
+
+    function createProgress(prob) {
+      return `<div class="progress-shell"><div class="progress-fill" data-width="${prob}"></div></div>`;
+    }
+
+    function renderAuthors() {
+      $("#authorsGrid").innerHTML = authors.map((item, index) => `
+        <article class="data-card reveal">
+          <div class="rank-row">
+            <div class="rank">${String(index + 1).padStart(2, "0")}</div>
+            <div>
+              <h3>${item.name}</h3>
+              <p class="muted">${item.reason}</p>
+            </div>
+            <div class="prob">${item.prob}%</div>
+          </div>
+          ${createProgress(item.prob)}
+          <div class="facts">
+            <span class="fact"><b>${item.last}</b>Ultima apparizione</span>
+            <span class="fact"><b>${item.freq}</b>Frequenza storica</span>
+            <span class="fact"><b>${item.absent}</b>Anni di assenza</span>
+          </div>
+          <div class="card-meta">Livello di probabilità: ${item.level}</div>
+          <div class="tag-list">${item.works.split(", ").map(work => `<span class="tag">${work}</span>`).join("")}</div>
+        </article>
+      `).join("");
+    }
+
+    function renderWorks() {
+      $("#worksGrid").innerHTML = works.map(([title, prob]) => `
+        <article class="data-card work-card reveal">
+          <div>
+            <div class="card-meta">Possibile opera</div>
+            <h3>${title}</h3>
+          </div>
+          <div>
+            <div class="prob">${prob}%</div>
+            ${createProgress(prob)}
+          </div>
+        </article>
+      `).join("");
+    }
+
+    function renderArguments() {
+      $("#argumentGrid").innerHTML = argumentsData.map(([name, prob, reason, freq, themes], index) => `
+        <article class="data-card reveal">
+          <div class="rank-row">
+            <div class="rank">${String(index + 1).padStart(2, "0")}</div>
+            <div>
+              <h3>${name}</h3>
+              <p class="muted">${reason}</p>
+            </div>
+            <div class="prob">${prob}%</div>
+          </div>
+          ${createProgress(prob)}
+          <div class="facts">
+            <span class="fact"><b>${freq}</b>Frequenza storica</span>
+            <span class="fact"><b>${prob > 70 ? "Forte" : "Stabile"}</b>Indicatore</span>
+            <span class="fact"><b>Top 10</b>Ranking</span>
+          </div>
+          <div class="card-meta">Temi più probabili</div>
+          <div class="tag-list">${themes.split(", ").map(theme => `<span class="tag">${theme}</span>`).join("")}</div>
+          <div class="mini-chart" aria-hidden="true">
+            ${[42, 58, 72, prob, 64, 50].map(v => `<span style="height:${v}%"></span>`).join("")}
+          </div>
+        </article>
+      `).join("");
+    }
+
+    function renderCurrentTopics() {
+      $("#currentGrid").innerHTML = currentTopics.map(([name, prob, desc, reason], index) => `
+        <article class="data-card reveal">
+          <div class="rank-row">
+            <div class="rank">${String(index + 1).padStart(2, "0")}</div>
+            <div>
+              <h3>${name}</h3>
+              <p class="muted">${desc}</p>
+            </div>
+            <div class="prob">${prob}%</div>
+          </div>
+          ${createProgress(prob)}
+          <p class="muted"><strong style="color: var(--color-bone);">Motivo della previsione:</strong> ${reason}</p>
+        </article>
+      `).join("");
+    }
+
+    function animateCounters(root = document) {
+      $$(".counter", root).forEach(counter => {
+        if (counter.dataset.done === "true") return;
+        counter.dataset.done = "true";
+        const target = Number(counter.dataset.target);
+        const suffix = counter.dataset.suffix || "";
+        const duration = 1400;
+        const start = performance.now();
+        const tick = now => {
+          const progress = Math.min((now - start) / duration, 1);
+          const eased = 1 - Math.pow(1 - progress, 3);
+          counter.textContent = Math.round(target * eased).toLocaleString("it-IT") + suffix;
+          if (progress < 1) requestAnimationFrame(tick);
+        };
+        requestAnimationFrame(tick);
+      });
+    }
+
+    function setupReveal() {
+      const observer = new IntersectionObserver(entries => {
+        entries.forEach(entry => {
+          if (!entry.isIntersecting) return;
+          entry.target.classList.add("is-visible");
+          $$(".progress-fill", entry.target).forEach(fill => {
+            fill.style.width = `${fill.dataset.width}%`;
+          });
+          animateCounters(entry.target);
+        });
+      }, { threshold: 0.16 });
+
+      $$(".reveal, .data-card, .policy-card").forEach(el => observer.observe(el));
+    }
+
+    function setupAnalysis() {
+      const scanPanel = $("#scanPanel");
+      const scanPercent = $("#scanPercent");
+      const resultsZone = $("#resultsZone");
+      const startButtons = $$("[data-start]");
+
+      startButtons.forEach(button => {
+        button.addEventListener("click", () => {
+          scanPanel.classList.remove("is-running");
+          void scanPanel.offsetWidth;
+          scanPanel.classList.add("is-running");
+          resultsZone.classList.remove("is-ready");
+
+          let progress = 0;
+          const interval = setInterval(() => {
+            progress = Math.min(progress + Math.ceil(Math.random() * 9), 100);
+            scanPercent.textContent = `${progress}%`;
+            if (progress >= 100) {
+              clearInterval(interval);
+              resultsZone.classList.add("is-ready");
+              animateCounters();
+              $$(".progress-fill").forEach(fill => fill.style.width = `${fill.dataset.width}%`);
+              document.querySelector("#engine").scrollIntoView({ behavior: "smooth", block: "start" });
+            }
+          }, 180);
+        });
+      });
+    }
+
+    function setupParticles() {
+      const canvas = $("#particleCanvas");
+      const ctx = canvas.getContext("2d");
+      const palette = ["#8052ff", "#ffffff", "#15846e", "#ffb829", "#32e6ff"];
+      let particles = [];
+      let width = 0;
+      let height = 0;
+
+      function resize() {
+        width = canvas.width = Math.floor(window.innerWidth * devicePixelRatio);
+        height = canvas.height = Math.floor(window.innerHeight * devicePixelRatio);
+        canvas.style.width = `${window.innerWidth}px`;
+        canvas.style.height = `${window.innerHeight}px`;
+        const count = Math.min(700, Math.floor(window.innerWidth * window.innerHeight / 1450));
+        particles = Array.from({ length: count }, (_, index) => {
+          const cluster = index < count * 0.58;
+          const cx = width * (cluster ? 0.72 : Math.random());
+          const cy = height * (cluster ? 0.38 : Math.random());
+          return {
+            x: cluster ? cx + (Math.random() - 0.5) * width * 0.42 : Math.random() * width,
+            y: cluster ? cy + (Math.random() - 0.5) * height * 0.62 : Math.random() * height,
+            size: (Math.random() * 2.8 + 1.4) * devicePixelRatio,
+            speed: (Math.random() * 0.22 + 0.05) * devicePixelRatio,
+            angle: Math.random() * Math.PI * 2,
+            color: palette[Math.floor(Math.random() * palette.length)],
+            shape: Math.floor(Math.random() * 4),
+            alpha: Math.random() * 0.7 + 0.25
+          };
+        });
+      }
+
+      function drawShape(p) {
+        ctx.save();
+        ctx.translate(p.x, p.y);
+        ctx.rotate(p.angle);
+        ctx.globalAlpha = p.alpha;
+        ctx.fillStyle = p.color;
+        ctx.strokeStyle = p.color;
+        ctx.lineWidth = 1 * devicePixelRatio;
+        if (p.shape === 0) {
+          ctx.beginPath();
+          ctx.arc(0, 0, p.size, 0, Math.PI * 2);
+          ctx.fill();
+        } else if (p.shape === 1) {
+          ctx.fillRect(-p.size, -p.size, p.size * 2, p.size * 2);
+        } else if (p.shape === 2) {
+          ctx.beginPath();
+          ctx.moveTo(0, -p.size * 1.5);
+          ctx.lineTo(p.size * 1.4, p.size);
+          ctx.lineTo(-p.size * 1.4, p.size);
+          ctx.closePath();
+          ctx.fill();
+        } else {
+          ctx.beginPath();
+          ctx.moveTo(0, -p.size * 1.5);
+          ctx.lineTo(p.size * 1.5, 0);
+          ctx.lineTo(0, p.size * 1.5);
+          ctx.lineTo(-p.size * 1.5, 0);
+          ctx.closePath();
+          ctx.stroke();
+        }
+        ctx.restore();
+      }
+
+      function animate() {
+        ctx.clearRect(0, 0, width, height);
+        particles.forEach(p => {
+          p.angle += 0.006;
+          p.x += Math.cos(p.angle) * p.speed;
+          p.y += Math.sin(p.angle) * p.speed;
+          if (p.x < -20) p.x = width + 20;
+          if (p.x > width + 20) p.x = -20;
+          if (p.y < -20) p.y = height + 20;
+          if (p.y > height + 20) p.y = -20;
+          drawShape(p);
+        });
+        requestAnimationFrame(animate);
+      }
+
+      window.addEventListener("resize", resize);
+      resize();
+      animate();
+    }
+
+    document.addEventListener("DOMContentLoaded", () => {
+      renderAuthors();
+      renderWorks();
+      renderArguments();
+      renderCurrentTopics();
+      setupParticles();
+      setupReveal();
+      setupAnalysis();
+      animateCounters($(".scan-panel"));
+      setTimeout(() => $("#loader").classList.add("is-hidden"), 1750);
+    });
+  </script>
+</body>
+</html>
